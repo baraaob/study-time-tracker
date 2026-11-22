@@ -1,18 +1,18 @@
 import datetime
-import os
 import json
+from pathlib import Path
 
-FILE = "study_data.json"
+FILE = Path(__file__).with_name("study_data.json")
 
 def load_data():
-    if not os.path.exists(FILE):
+    if not FILE.exists():
         return None
     else:
-        with open(FILE, mode="r", encoding="utf-8") as read_file:
+        with FILE.open(mode="r", encoding="utf-8") as read_file:
             return json.load(read_file)
 
 def save_data(data):
-    with open(FILE, mode="w", encoding="utf-8") as write_file:
+    with FILE.open(mode="w", encoding="utf-8") as write_file:
         json.dump(data, write_file, indent=4)
 
 def take_timer():
@@ -40,13 +40,10 @@ def new_day():
         "session_finished": True
     }
 
-def leave():
-    exit()
-
 
 def main():
     data = load_data()
-    if data == None:
+    if data is None:
         data = new_day()
 
     print("\n\n\nWelcome to Study Time Tracker")
@@ -94,7 +91,8 @@ def main():
             data = new_day()
             save_data(data)
         elif user_input == 6:
-            leave()
+            print("\n\n\n➜ Program closed successfully!")
+            break
 
 if __name__ == "__main__":
     main()
