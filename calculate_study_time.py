@@ -23,6 +23,10 @@ def total_study(start_text, end_text):
     end = datetime.datetime.fromisoformat(end_text)
     return int((end - start).total_seconds())
 
+def reset_session(data):
+    data["start_time"] = 0
+    data["session_finished"] = True
+
 def show_total(total_seconds):
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
@@ -51,9 +55,10 @@ def main():
         print("\n\n===== Study Tracker Options =====\n")
         print("[1] Start the timer")
         print("[2] Stop the timer")
-        print("[3] Total study hours")
-        print("[4] New day")
-        print("[5] Exit")
+        print("[3] Reset the session")
+        print("[4] Total study hours")
+        print("[5] New day")
+        print("[6] Exit")
         print("\n==================================\n")
 
         user_input = int(input("Choose what you want and type the number: ").strip())
@@ -76,12 +81,19 @@ def main():
                 data["session_finished"] = True
                 save_data(data)
         elif user_input == 3:
-            show_total(data["total_study"])
+            if data["session_finished"]:
+                print("\n\n\n➜ No session is running, so there is nothing to reset.")
+            else:
+                print("\n\n\n➜ Session reset successfully! Good luck with the next one!")
+                reset_session(data)
+                save_data(data)
         elif user_input == 4:
+            show_total(data["total_study"])
+        elif user_input == 5:
             print("\n\n\n➜ Hi! A new day, a fresh start, and a new session!")
             data = new_day()
             save_data(data)
-        elif user_input == 5:
+        elif user_input == 6:
             leave()
 
 if __name__ == "__main__":
