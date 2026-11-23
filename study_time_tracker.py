@@ -9,12 +9,37 @@ FILE = Path(__file__).with_name("study_data.json")
 
 
 def load_data():
-    """Return saved data, or None if the data file does not exist."""
+    """Load the saved study data from the JSON file.
+
+    Return None if the file is missing, damaged, or not a dictionary.
+    Missing keys are filled in from the defaults, and a total_study or
+    session_finished value of the wrong type is replaced by its default.
+    """
+    
     if not FILE.exists():
         return None
-    else:
+
+    try:
         with FILE.open(mode="r", encoding="utf-8") as read_file:
-            return json.load(read_file)
+            loaded_data = json.load(read_file)
+    except json.decoder.JSONDecodeError:
+        print("\n\n\n\n➜ Warning: the data file is damaged. Starting fresh.")
+        return None
+
+    if not isinstance(loaded_data, dict):
+        return None
+
+    defaults = new_day()
+    for key, value in defaults.items():
+        if key not in loaded_data:
+            loaded_data[key] = value
+
+    if type(loaded_data["total_study"]) is not int:
+        loaded_data["total_study"] = defaults["total_study"]
+    if type(loaded_data["session_finished"]) is not bool:
+        loaded_data["session_finished"] = defaults["session_finished"]
+
+    return loaded_data
 
 
 def save_data(data):
@@ -77,7 +102,11 @@ def main():
         print("[6] Exit")
         print("\n==================================\n")
 
-        user_input = int(input("Choose what you want and type the number: ").strip())
+        try:
+            user_input = int(input("Choose what you want and type the number: ").strip())
+        except ValueError:
+            print("\n\n\n➜ Please type a number, not letters.")
+            continue
 
         # session_finished prevents starting two sessions at once,
         # and stopping a session that never started
@@ -115,6 +144,8 @@ def main():
         elif user_input == 6:
             print("\n\n\n➜ Program closed successfully!")
             break
+        else:
+            print("\n\n\n➜ Please choose a number from the list.")
 
 
 if __name__ == "__main__":
