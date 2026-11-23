@@ -1,38 +1,56 @@
+"""Study Time Tracker: start and stop a timer, and save total study time to a JSON file."""
+
 import datetime
 import json
 from pathlib import Path
 
+# Keep the data file with the script, no matter where it is.
 FILE = Path(__file__).with_name("study_data.json")
 
+
 def load_data():
+    """Return saved data, or None if the data file does not exist."""
     if not FILE.exists():
         return None
     else:
         with FILE.open(mode="r", encoding="utf-8") as read_file:
             return json.load(read_file)
 
+
 def save_data(data):
+    """Overwrite the data file with the current data."""
     with FILE.open(mode="w", encoding="utf-8") as write_file:
         json.dump(data, write_file, indent=4)
 
+
 def take_timer():
+    """Return the current time as ISO-formatted text."""
+    # JSON cannot store datetime objects, so timestamps are stored as text.
     return datetime.datetime.now().isoformat(timespec="seconds")
 
+
 def total_study(start_text, end_text):
+    """Return elapsed seconds between two ISO-formatted timestamp strings."""
     start = datetime.datetime.fromisoformat(start_text)
     end = datetime.datetime.fromisoformat(end_text)
     return int((end - start).total_seconds())
 
+
 def reset_session(data):
+    """Reset the session while preserving the accumulated study time."""
     data["start_time"] = 0
     data["session_finished"] = True
 
+
 def show_total(total_seconds):
+    """Convert seconds into hours, minutes, and seconds and display it."""
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     print(f"\n\n\n➜ Your total study hour is: {hours:02d}:{minutes:02d}:{seconds:02d}")
 
+
 def new_day():
+    """Return a fresh study-tracker state."""
     return {
         "start_time": 0,
         "end_time": 0,
@@ -43,6 +61,7 @@ def new_day():
 
 def main():
     data = load_data()
+    # Start with default data on the first run if the file isn't there.
     if data is None:
         data = new_day()
 
@@ -60,6 +79,8 @@ def main():
 
         user_input = int(input("Choose what you want and type the number: ").strip())
 
+        # session_finished prevents starting two sessions at once,
+        # and stopping a session that never started
         if user_input == 1:
             if not data["session_finished"]:
                 print("\n\n\n➜ The current session is still active! Please end it before starting a new one.")
@@ -88,11 +109,13 @@ def main():
             show_total(data["total_study"])
         elif user_input == 5:
             print("\n\n\n➜ Hi! A new day, a fresh start, and a new session!")
+            # Discards all data, even a session that is still running.
             data = new_day()
             save_data(data)
         elif user_input == 6:
             print("\n\n\n➜ Program closed successfully!")
             break
+
 
 if __name__ == "__main__":
     main()
