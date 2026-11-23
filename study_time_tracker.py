@@ -35,8 +35,11 @@ def load_data():
             loaded_data[key] = value
 
     if type(loaded_data["total_study"]) is not int:
+        print("\n\n\n➜ Warning: total study was invalid. Resetting it.")
         loaded_data["total_study"] = defaults["total_study"]
+
     if type(loaded_data["session_finished"]) is not bool:
+        print("\n\n\n➜ Warning: session status was invalid. Resetting it.")
         loaded_data["session_finished"] = defaults["session_finished"]
 
     return loaded_data
