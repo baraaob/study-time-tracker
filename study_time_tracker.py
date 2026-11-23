@@ -70,11 +70,14 @@ def reset_session(data):
     data["session_finished"] = True
 
 
-def show_total(total_seconds):
-    """Convert seconds into hours, minutes, and seconds and display it."""
+def show_total(total_seconds, session_finished):
+    """Convert seconds into hours, minutes, and seconds and display it, and warn if a session is still running."""
     hours, remainder = divmod(total_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     print(f"\n\n\n➜ Your total study hour is: {hours:02d}:{minutes:02d}:{seconds:02d}")
+
+    if not session_finished:
+        print("\n➜ There is a running session, so this total does not include it yet.")
 
 
 def new_day():
@@ -138,7 +141,7 @@ def main():
                 reset_session(data)
                 save_data(data)
         elif user_input == 4:
-            show_total(data["total_study"])
+            show_total(data["total_study"] ,data["session_finished"])
         elif user_input == 5:
             print("\n\n\n➜ Hi! A new day, a fresh start, and a new session!")
             # Discards all data, even a session that is still running.
