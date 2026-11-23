@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 # Keep the data file with the script, no matter where it is.
-FILE = Path(__file__).with_name("study_data.json")
+FILE = Path(__file__).with_name("data.json")
 
 
 def load_data():
@@ -63,7 +63,7 @@ def total_study(start_text, end_text):
 
 def reset_session(data):
     """Reset the session while preserving the accumulated study time."""
-    data["start_time"] = 0
+    data["start_time"] = None
     data["session_finished"] = True
 
 
@@ -77,8 +77,8 @@ def show_total(total_seconds):
 def new_day():
     """Return a fresh study-tracker state."""
     return {
-        "start_time": 0,
-        "end_time": 0,
+        "start_time": None,
+        "end_time": None,
         "total_study": 0,
         "session_finished": True
     }
