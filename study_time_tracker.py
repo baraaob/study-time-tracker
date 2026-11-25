@@ -51,13 +51,13 @@ def save_data(data):
         json.dump(data, write_file, indent=4)
 
 
-def take_timer():
+def current_time_text():
     """Return the current time as ISO-formatted text."""
     # JSON cannot store datetime objects, so timestamps are stored as text.
     return datetime.datetime.now().isoformat(timespec="seconds")
 
 
-def total_study(start_text, end_text):
+def session_length(start_text, end_text):
     """Return elapsed seconds between two ISO-formatted timestamp strings."""
     start = datetime.datetime.fromisoformat(start_text)
     end = datetime.datetime.fromisoformat(end_text)
@@ -121,7 +121,7 @@ def main():
                 print("\n\n\n➜ The current session is still active! Please end it before starting a new one.")
             else:
                 print("\n\n\n➜ Timer starts now — good luck!")
-                data["start_time"] = take_timer()
+                data["start_time"] = current_time_text()
                 data["session_finished"] = False
                 save_data(data)
         elif user_input == 2:
@@ -129,8 +129,9 @@ def main():
                 print("\n\n\n➜ This session has already ended! Start a new session to continue.")
             else:
                 print("\n\n\n➜ Time's up! — Hope you did your best!")
-                data["end_time"] = take_timer()
-                data["total_study"] += total_study(data["start_time"], data["end_time"])
+                data["end_time"] = current_time_text()
+                session_seconds = session_length(data["start_time"], data["end_time"])
+                data["total_study"] += session_seconds
                 data["session_finished"] = True
                 save_data(data)
         elif user_input == 3:
