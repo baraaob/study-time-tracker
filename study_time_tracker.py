@@ -2,10 +2,14 @@
 
 import datetime
 import json
+import sys
 from pathlib import Path
 
-# Keep the data file with the script, no matter where it is.
-FILE = Path(__file__).with_name("data.json")
+# Store data beside the executable when packaged, or beside this script otherwise.
+if getattr(sys, "frozen", False):
+    FILE = Path(sys.executable).with_name("data.json")
+else:
+    FILE = Path(__file__).with_name("data.json")
 
 
 def load_data():
