@@ -63,7 +63,7 @@ def ask_yes_no(message):
 
 
 def current_time_text():
-    """Return the current time as ISO-formatted text."""
+    """Return the current date and time as an ISO-formatted string."""
     # JSON cannot store datetime objects, so timestamps are stored as text.
     return datetime.datetime.now().isoformat(timespec="seconds")
 
@@ -86,9 +86,9 @@ def reset_session(data):
     data["session_finished"] = True
 
 
-def format_time(duration_seconds):
+def format_time(time_seconds):
     """Format a time value in seconds as hh:mm:ss text."""
-    hours, remainder = divmod(duration_seconds, 3600)
+    hours, remainder = divmod(time_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
