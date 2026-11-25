@@ -90,6 +90,17 @@ def show_total(total_seconds, session_finished):
         print("\n➜ There is a running session, so this total does not include it yet.")
 
 
+def show_session_summary(start_text, end_text, session_seconds):
+    """Display a session's start time, end time, and duration."""
+    start = parse_iso_timestamp(start_text).strftime("%I:%M %p")
+    end = parse_iso_timestamp(end_text).strftime("%I:%M %p")
+    print("\n\n=========== session summary ===========")
+    print(f"\n➜ Your session started at {start}")
+    print(f"\n➜ Your session ended at {end}")
+    print(f"\n➜ You studied {format_time(session_seconds)}")
+    print("\n======================================")
+
+
 def new_day():
     """Return a fresh study-tracker state."""
     return {
@@ -144,6 +155,7 @@ def main():
                 data["total_study"] += session_seconds
                 data["session_finished"] = True
                 save_data(data)
+                show_session_summary(data["start_time"], data["end_time"], session_seconds)
         elif user_input == 3:
             if data["session_finished"]:
                 print("\n\n\n➜ No session is running, so there is nothing to reset.")
