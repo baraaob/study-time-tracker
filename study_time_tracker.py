@@ -51,6 +51,17 @@ def save_data(data):
         json.dump(data, write_file, indent=4)
 
 
+def ask_yes_no(message):
+    """Ask the user a yes/no question and return their answer as a boolean."""
+    while True:
+        answer = input(f"{message} (yes/no): ").strip().lower()
+        if answer in ("yes", "y"):
+            return True
+        if answer in ("no", "n"):
+            return False
+        print("\n➜ Please answer yes or no")
+
+
 def current_time_text():
     """Return the current time as ISO-formatted text."""
     # JSON cannot store datetime objects, so timestamps are stored as text.
@@ -149,27 +160,37 @@ def main():
             if data["session_finished"]:
                 print("\n\n\n➜ This session has already ended! Start a new session to continue.")
             else:
-                print("\n\n\n➜ Time's up! — Hope you did your best!")
-                data["end_time"] = current_time_text()
-                session_seconds = session_duration_seconds(data["start_time"], data["end_time"])
-                data["total_study"] += session_seconds
-                data["session_finished"] = True
-                save_data(data)
-                show_session_summary(data["start_time"], data["end_time"], session_seconds)
+                end_time = current_time_text()
+                if ask_yes_no("\nAre you sure you want to stop the session?"):
+                    print("\n\n\n➜ Time's up! — Hope you did your best!")
+                    data["end_time"] = end_time
+                    session_seconds = session_duration_seconds(data["start_time"], data["end_time"])
+                    data["total_study"] += session_seconds
+                    data["session_finished"] = True
+                    save_data(data)
+                    show_session_summary(data["start_time"], data["end_time"], session_seconds)
+                else:
+                    print("\n\n\n➜ Session stop cancelled. The timer is still running.")
         elif user_input == 3:
             if data["session_finished"]:
                 print("\n\n\n➜ No session is running, so there is nothing to reset.")
             else:
-                print("\n\n\n➜ Session reset successfully! Good luck with the next one!")
-                reset_session(data)
-                save_data(data)
+                if ask_yes_no("\nAre you sure you want to reset the current session?"):
+                    print("\n\n\n➜ Session reset successfully! Good luck with the next one!")
+                    reset_session(data)
+                    save_data(data)
+                else:
+                    print("\n\n\n➜ Session reset cancelled. The timer is still running.")
         elif user_input == 4:
             show_total_study_time(data["total_study"] ,data["session_finished"])
         elif user_input == 5:
-            print("\n\n\n➜ Hi! A new day, a fresh start, and a new session!")
-            # Discards all data, even a session that is still running.
-            data = new_day()
-            save_data(data)
+            if ask_yes_no("\nAre you sure you want to reset all data and start a new day?"):
+                print("\n\n\n➜ Hi! A new day, a fresh start, and a new session!")
+                # Discards all data, even a session that is still running.
+                data = new_day()
+                save_data(data)
+            else:
+                print("\n\n\n➜ New day cancelled. Your existing data is preserved.")
         elif user_input == 6:
             print("\n\n\n➜ Program closed successfully!")
             break
