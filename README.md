@@ -1,4 +1,4 @@
- <h1 align="center">Study Time Tracker</h1>
+<h1 align="center">Study Time Tracker</h1>
 
 <p align="center">
   A simple Python command-line application to track study sessions and monitor total study time.
@@ -31,6 +31,26 @@
 </p>
 
 <p>No Python installation is required to run the executable.</p>
+
+<h3>Windows Security Notice</h3>
+
+<p>
+  Windows may display a Microsoft Defender SmartScreen warning when running this application because it is new and has limited download reputation.
+</p>
+
+<p>
+  This warning does not necessarily mean the application is malicious. You can review the source code in this repository before running it.
+</p>
+
+<h2>Latest Version</h2>
+
+<p>
+  <strong>v1.0.0</strong>
+</p>
+
+<p>
+  Check the <a href="https://github.com/baraaob/study-time-tracker/releases">Releases page</a> for the latest version and updates.
+</p>
 
 <h2>Run from Source</h2>
 
@@ -69,12 +89,13 @@ python3 study_time_tracker.py
 <h2>Data Storage</h2>
 
 <p>
-  The application stores its data in a local <code>data.json</code> file beside the Python script.
-  It stores session timestamps, accumulated study time, and the current session status.
+  The application stores its data in a local <code>data.json</code> file beside the application.
+  When running from source, the file is stored beside the Python script. When using the Windows executable, it is stored beside the EXE.
 </p>
 
 <p>
-  Your personal data is stored locally and is not included in Git commits.
+  The file stores session timestamps, accumulated study time, and the current session status.
+  Your personal study data is stored locally and is not included in Git commits.
 </p>
 
 <h3>Important: Data Reset</h3>
