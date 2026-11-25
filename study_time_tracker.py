@@ -57,10 +57,15 @@ def current_time_text():
     return datetime.datetime.now().isoformat(timespec="seconds")
 
 
+def parse_iso_timestamp(timestamp_text):
+    """Parse an ISO-formatted timestamp into a datetime."""
+    return datetime.datetime.fromisoformat(timestamp_text)
+
+
 def session_length(start_text, end_text):
     """Return elapsed seconds between two ISO-formatted timestamp strings."""
-    start = datetime.datetime.fromisoformat(start_text)
-    end = datetime.datetime.fromisoformat(end_text)
+    start = parse_iso_timestamp(start_text)
+    end = parse_iso_timestamp(end_text)
     return int((end - start).total_seconds())
 
 
