@@ -70,12 +70,17 @@ def reset_session(data):
     data["session_finished"] = True
 
 
-def show_total(total_seconds, session_finished):
-    """Convert seconds into hours, minutes, and seconds and display it, and warn if a session is still running."""
-    hours, remainder = divmod(total_seconds, 3600)
+def format_time(duration_seconds):
+    """Return a duration in seconds as hh:mm:ss text."""
+    hours, remainder = divmod(duration_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
-    print(f"\n\n\n➜ Your total study hour is: {hours:02d}:{minutes:02d}:{seconds:02d}")
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
+
+def show_total(total_seconds, session_finished):
+    """Display the total study time and warn if a session is still running."""
+    formatted_time = format_time(total_seconds)
+    print(f"\n\n\n➜ Your total study hours are: {formatted_time}")
     if not session_finished:
         print("\n➜ There is a running session, so this total does not include it yet.")
 
