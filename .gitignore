@@ -1,2 +1,6 @@
 data.json
 TODO.md
+build/
+dist/
+*.spec
+__pycache__/
