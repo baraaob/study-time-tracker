@@ -57,15 +57,15 @@ def current_time_text():
     return datetime.datetime.now().isoformat(timespec="seconds")
 
 
-def parse_iso_timestamp(timestamp_text):
-    """Parse an ISO-formatted timestamp into a datetime."""
+def parse_iso_datetime(timestamp_text):
+    """Convert an ISO-formatted timestamp string into a datetime."""
     return datetime.datetime.fromisoformat(timestamp_text)
 
 
-def session_length(start_text, end_text):
-    """Return elapsed seconds between two ISO-formatted timestamp strings."""
-    start = parse_iso_timestamp(start_text)
-    end = parse_iso_timestamp(end_text)
+def session_duration_seconds(start_text, end_text):
+    """Return elapsed time in seconds between two ISO-formatted timestamp strings."""
+    start = parse_iso_datetime(start_text)
+    end = parse_iso_datetime(end_text)
     return int((end - start).total_seconds())
 
 
@@ -76,13 +76,13 @@ def reset_session(data):
 
 
 def format_time(duration_seconds):
-    """Return a duration in seconds as hh:mm:ss text."""
+    """Format a time value in seconds as hh:mm:ss text."""
     hours, remainder = divmod(duration_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def show_total(total_seconds, session_finished):
+def show_total_study_time(total_seconds, session_finished):
     """Display the total study time and warn if a session is still running."""
     formatted_time = format_time(total_seconds)
     print(f"\n\n\n➜ Your total study hours are: {formatted_time}")
@@ -92,8 +92,8 @@ def show_total(total_seconds, session_finished):
 
 def show_session_summary(start_text, end_text, session_seconds):
     """Display a session's start time, end time, and duration."""
-    start = parse_iso_timestamp(start_text).strftime("%I:%M %p")
-    end = parse_iso_timestamp(end_text).strftime("%I:%M %p")
+    start = parse_iso_datetime(start_text).strftime("%I:%M %p")
+    end = parse_iso_datetime(end_text).strftime("%I:%M %p")
     print("\n\n=========== session summary ===========")
     print(f"\n➜ Your session started at {start}")
     print(f"\n➜ Your session ended at {end}")
@@ -151,7 +151,7 @@ def main():
             else:
                 print("\n\n\n➜ Time's up! — Hope you did your best!")
                 data["end_time"] = current_time_text()
-                session_seconds = session_length(data["start_time"], data["end_time"])
+                session_seconds = session_duration_seconds(data["start_time"], data["end_time"])
                 data["total_study"] += session_seconds
                 data["session_finished"] = True
                 save_data(data)
@@ -164,7 +164,7 @@ def main():
                 reset_session(data)
                 save_data(data)
         elif user_input == 4:
-            show_total(data["total_study"] ,data["session_finished"])
+            show_total_study_time(data["total_study"] ,data["session_finished"])
         elif user_input == 5:
             print("\n\n\n➜ Hi! A new day, a fresh start, and a new session!")
             # Discards all data, even a session that is still running.
